@@ -16,6 +16,7 @@
 package io.github.nixoxo.popularmovies.utils;
 
 import android.net.Uri;
+import android.support.compat.BuildConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +36,7 @@ public class NetworkUtils {
     final static String PARAM_QUERY = "q";
 
     // TODO insert apikey
-    private static final String apikey = "";
+    private static final String apikey = io.github.nixoxo.popularmovies.BuildConfig.TMDB_API_KEY;
 
     private static final String TMDB_BASE_URL = "https://api.themoviedb.org/3/";
 
