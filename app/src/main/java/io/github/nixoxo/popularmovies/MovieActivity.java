@@ -37,7 +37,7 @@ public class MovieActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
 
-        movie = (Movie) getIntent().getSerializableExtra("movie");
+        movie = (Movie) getIntent().getParcelableExtra("movie");
         ImageView poster = (ImageView) findViewById(R.id.movie_poster);
         Picasso.with(this).load("https://image.tmdb.org/t/p/w500/" + movie.getPoster_path()).into(poster);
 

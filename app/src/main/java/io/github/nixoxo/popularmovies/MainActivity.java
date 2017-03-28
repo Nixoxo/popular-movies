@@ -110,7 +110,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         mMovieAdapter = new MovieAdapter(this);
 
         mRecyclerView.setAdapter(mMovieAdapter);
-
+        Log.d("test", "here is the key");
+        Log.d("test", BuildConfig.TMDB_API_KEY);
         loadMovieData(false);
     }
 
