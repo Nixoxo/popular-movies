@@ -15,7 +15,7 @@ import java.util.List;
  * Created by nixoxo on 28/03/2017.
  */
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder>{
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
     private final MovieAdapterOnClickHandler mClickHandler;
 
@@ -24,8 +24,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     private Context context;
 
 
-    public MovieAdapter(MovieAdapterOnClickHandler mClickHandler){
-
+    public MovieAdapter(MovieAdapterOnClickHandler mClickHandler) {
         this.mClickHandler = mClickHandler;
     }
 
@@ -42,13 +41,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public void onBindViewHolder(MovieAdapterViewHolder holder, int position) {
-
         Movie movie = movieList.get(position);
         Picasso.with(context).load("https://image.tmdb.org/t/p/w500/" + movie.getPoster_path()).into(holder.imageView);
-        //Picasso.with(MainActivity.this).load("https://image.tmdb.org/t/p/w500/" + poster_path).into(child);
-
-
-
     }
 
     @Override
@@ -62,7 +56,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     public interface MovieAdapterOnClickHandler {
         void onClick(Movie id);
     }
-
 
 
     public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

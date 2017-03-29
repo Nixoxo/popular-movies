@@ -2,18 +2,15 @@ package io.github.nixoxo.popularmovies;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.Serializable;
 
 /**
  * Created by nixoxo on 27/03/2017.
  */
 
-public class Movie implements Parcelable{
+public class Movie implements Parcelable {
 
     private String id;
     private String poster_path;
@@ -23,12 +20,11 @@ public class Movie implements Parcelable{
     private String title;
 
 
-
     public Movie(JSONObject object) throws JSONException {
         id = String.valueOf(object.get("id"));
         poster_path = String.valueOf(object.get("poster_path"));
         vote_average = String.valueOf(object.get("vote_average")) + " of 10";
-        overview= String.valueOf(object.get("overview"));
+        overview = String.valueOf(object.get("overview"));
         release_date = String.valueOf(object.get("release_date"));
         title = String.valueOf(object.get("title"));
     }
@@ -65,7 +61,7 @@ public class Movie implements Parcelable{
         return poster_path;
     }
 
-    public String getId(){
+    public String getId() {
         return id;
     }
 

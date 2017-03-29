@@ -16,7 +16,6 @@
 package io.github.nixoxo.popularmovies.utils;
 
 import android.net.Uri;
-import android.support.compat.BuildConfig;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,15 +1,18 @@
 package io.github.nixoxo.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -20,8 +23,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URL;
 
-import io.github.nixoxo.popularmovies.data.FavoriteMovie;
-import io.github.nixoxo.popularmovies.data.MovieProvider;
+import io.github.nixoxo.popularmovies.data.MovieContract;
 import io.github.nixoxo.popularmovies.utils.NetworkUtils;
 
 public class MovieActivity extends AppCompatActivity implements View.OnClickListener {
@@ -30,7 +32,6 @@ public class MovieActivity extends AppCompatActivity implements View.OnClickList
     private String youtubeKey;
     private Button mFavoriteButton;
     private Movie movie;
-    private MovieProvider movieProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +63,6 @@ public class MovieActivity extends AppCompatActivity implements View.OnClickList
         mFavoriteButton = (Button) findViewById(R.id.favorite_button);
         mFavoriteButton.setOnClickListener(this);
 
-        movieProvider = new MovieProvider(this);
         checkFavoriteButton();
 
         loadReviews(Integer.valueOf(movie.getId()));
@@ -70,14 +70,17 @@ public class MovieActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void checkFavoriteButton() {
-        movieProvider.open();
-        FavoriteMovie favoriteMovie = movieProvider.getFavoriteMovie(movie.getId());
-        if (favoriteMovie != null) {
+
+        Cursor query = getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, null, MovieContract.MovieEntry.COLUMN_MOVIEID + "=?", new String[]{movie.getId()}, null);
+        //String favoriteMovie_ = (String) query;
+        //if (favoriteMovie != null) {
+
+        if (query.moveToFirst()) {
             mFavoriteButton.setText("Remove from Favorites");
-        }else{
+        } else {
             mFavoriteButton.setText("MARK AS FAVORITE");
         }
-        movieProvider.close();
+
     }
 
     private void loadVideos(int id) {
@@ -96,16 +99,30 @@ public class MovieActivity extends AppCompatActivity implements View.OnClickList
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + youtubeKey)));
         } else if (view.getId() == R.id.favorite_button) {
 
-            movieProvider.open();
-            FavoriteMovie favoriteMovie = movieProvider.getFavoriteMovie(movie.getId());
-            if (favoriteMovie == null) {
-                movieProvider.createFavoriteMove(movie.getId(), movie.getTitle());
-            } else {
-                movieProvider.removeFavoriteMovie(favoriteMovie.get_id());
+            Cursor query = getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, null, MovieContract.MovieEntry.COLUMN_MOVIEID + "=?", new String[]{movie.getId()}, null);
+            if (query.moveToFirst()) {
+                int idCol = query.getColumnIndex(MovieContract.MovieEntry._ID);
+                String id = query.getString(idCol);
+                Uri deleteUri = MovieContract.MovieEntry.CONTENT_URI.buildUpon().appendPath(id).build();
+                Log.d("URI", "onClick: " + deleteUri);
+                //int status = getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI, MovieContract.MovieEntry._ID + "=?", new String[]{id});
+                int status = getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI, MovieContract.MovieEntry._ID + "=?", new String[]{id});
+                if (status > 0) {
+                    Toast.makeText(this, "Removed a movie from favorites", Toast.LENGTH_SHORT).show();
+                }
+                Log.d("Main Acitivity", "onClick: " + id + " status: " + status);
+            }else{
+                String id = movie.getId();
+                String title = movie.getTitle();
+                ContentValues values = new ContentValues();
+                values.put(MovieContract.MovieEntry.COLUMN_TITLE, title);
+                values.put(MovieContract.MovieEntry.COLUMN_MOVIEID, id);
+                Uri insert = getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, values);
+                if (insert != null) {
+                    Toast.makeText(this, "Added a new movie to favorites", Toast.LENGTH_SHORT).show();
+                }
             }
-            movieProvider.close();
             checkFavoriteButton();
-
         }
     }
 

@@ -21,6 +21,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".MovieActivity"></activity>
+
+        <provider
+            android:name="io.github.nixoxo.popularmovies.data.MovieContentProvider"
+            android:authorities="io.github.nixoxo.popularmovies"
+            android:exported="true"></provider>
     </application>
+
 
 </manifest>
